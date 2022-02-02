@@ -1,5 +1,13 @@
 module InventoryManagementWebApp
 
-# Write your package code here.
+using Dash, DashHtmlComponents, DashCoreComponents, DashTable	
+using DataFrames, Base64
+using InventoryManagement
 
-end
+export build_app
+
+include("utils.jl")
+include("callbacks.jl")
+include("app.jl")
+
+end # module

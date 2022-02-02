@@ -3,11 +3,20 @@ uuid = "c2ad7252-8df1-4bc9-8753-7a1007f7b1f5"
 authors = ["hdavid16 <hperez16@gmail.com> and contributors"]
 version = "0.1.0"
 
-[extras]
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+[deps]
+Base64 = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
+Dash = "1b08a953-4be3-4667-9a23-3db579824955"
+DashCoreComponents = "1b08a953-4be3-4667-9a23-9da06441d987"
+DashHtmlComponents = "1b08a953-4be3-4667-9a23-24100242a84a"
+DashTable = "1b08a953-4be3-4667-9a23-f0e2ba4deb9a"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+InventoryManagement = "2ad91f63-398d-4379-af6a-5a85689656d5"
 
 [compat]
 julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
 test = ["Test"]
