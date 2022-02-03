@@ -32,7 +32,8 @@ function show_table(df, filename, last_modified)
         html_div("Last Modified: $(last_modified)"),
         dash_datatable(
             data=[Dict(pairs(NamedTuple(eachrow(df)[j]))) for j in 1:nrow(df)],
-            columns=[Dict("name" =>i, "id" => i) for i in names(df)]
+            columns=[Dict("name" =>i, "id" => i) for i in names(df)],
+            page_size=10
         ),
     ])
 end
