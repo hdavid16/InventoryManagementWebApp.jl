@@ -35,8 +35,7 @@ function run_simulation(app)
         State("policy_variable","value"),
         State("policy_type","value"),
         State("mode","value"),
-        State("num_periods","value"),
-        prevent_initial_call = true
+        State("num_periods","value")
     ) do n_clicks, bom_json, lt_json, demand_json, policy_json, policy_variable, policy_type, op_mode, num_periods
         #initialize outputs
         msg = html_div("")
