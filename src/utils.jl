@@ -155,6 +155,10 @@ function run_policy!(net, policy_df, policy_variable, policy_type, num_periods, 
             )
             => :review_period
     )
+
+    #update materials list
+    mats = get_prop(net, :materials)
+    union!(mats, policy_df.material)
     
     #set initial inventory levels
     node_dict = get_prop(net, :node_dictionary)
