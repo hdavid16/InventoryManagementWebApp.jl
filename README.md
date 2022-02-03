@@ -38,4 +38,5 @@ The simulation can then be run for the number of periods specified on the webapp
 - Market Demand
 
 ## Tips
-For best performance with the Heroku app, use a standard web browser that is up to date. When downloading result files, your browser will prompt you to allow multiple file downloads.
+- For best performance with the Heroku app, use a standard web browser that is up to date. 
+- When downloading result files, your browser will prompt you to allow multiple file downloads.
