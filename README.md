@@ -1,6 +1,8 @@
 # InventoryManagementWebApp
 
-This is a quick and simple interface to run *InventoryManagement.jl* using [Dash](https://dash.plotly.com/julia). The webapp is also hosted on [Heroku](https://supply-chain-sim.herokuapp.com/).
+This is a quick and simple interface to run [InventoryManagement.jl](https://github.com/hdavid16/InventoryManagement.jl) using [Dash](https://dash.plotly.com/julia). The webapp is also hosted on [Heroku](https://supply-chain-sim.herokuapp.com/).
+
+## Inputs
 
 The interface will request loading 4 CSV files as inputs to build the simulation environment (*Note*: all names are case sensitive and **must be strings**, not numbers. If you have a numerical identifier for a name, preceed it by a string, i.e., `100 -> m100`):
 - Bill of Materials: must have the following columns:
@@ -19,10 +21,12 @@ The interface will request loading 4 CSV files as inputs to build the simulation
 - Policy: must have the following columns
   - `node`: node name
   - `material`: material name
-  - `initial_inventory`: starting inventory for the simulation
+  - `initial_inventory`: starting inventory quantity for that `material` at that `node`. If unlimited demand, use `unlimited`. 
   - `param1`: reorder point for the inventory policy (`r` for `(r, Q)` or `s` for `(s, S)`)
   - `param2`: second parameter for the inventory policy (`Q` for `(r, Q)` or `S` for `(s, S)`)
   - `review_period`: integer number of periods between each inventory review
+
+## Outputs
 
 The simulation can then be run for the number of periods specified on the webapp interface. Once the simulation completes, the timeseries results can be downloaded as CSVs:
 - Inventory Levels
@@ -32,3 +36,7 @@ The simulation can then be run for the number of periods specified on the webapp
 - Pipeline Inventory
 - Replenishment Orders
 - Market Demand
+
+## Tips
+- For best performance with the Heroku app, use a standard web browser that is up to date. 
+- When downloading result files, your browser will prompt you to allow multiple file downloads.
