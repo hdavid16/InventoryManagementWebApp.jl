@@ -45,8 +45,8 @@ function build_network(lead_time_df)
     node_names = union(lead_time_df[:,1],lead_time_df[:,2])
     num_nodes = length(node_names)
     node_dict = Dict(n => i for (i,n) in enumerate(node_names))
-    set_prop!(net, :node_dictionary, node_dict)
     net = MetaDiGraph(num_nodes)
+    set_prop!(net, :node_dictionary, node_dict)
 
     #add materials if provided
     materials = names(lead_time_df)[3:end]
@@ -154,6 +154,17 @@ function run_policy!(net, policy_df, policy_variable, policy_type, num_periods, 
             )
             => :review_period
     )
+
+    #set initial inventory levels
+    node_dict = get_prop(net, :node_dictionary)
+    policy_grp = groupby(policy_df, 1) #group by node
+    for df in policy_grp
+        node_name = df[1,1] #node id is the first column
+        node_id = node_dict[node_name]
+        set_prop!(node_id, :initial_inventory, Dict(
+            df[:,2] .=> df[:, :initial_inventory]
+        ))
+    end
 
     #build dictionaries for policy
     param1 = Dict((i[1],i[2]) => i[:param1] for i in eachrow(policy_df))
