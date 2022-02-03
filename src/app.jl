@@ -113,7 +113,6 @@ function build_app(port=8050)
             ),
             html_button("Build and Run Simulation Model", id="build_and_run", n_clicks=0),
         ]),
-        dcc_confirmdialog(id = "sim_complete", message = ""),
         dcc_loading(html_div(id = "build_and_run_msg")),
         dcc_store(id = "store_inv_on_hand", data=JSON.json(DataFrame())),
         dcc_store(id = "store_inv_level", data=JSON.json(DataFrame())),

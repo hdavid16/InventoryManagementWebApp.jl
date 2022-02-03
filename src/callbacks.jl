@@ -17,8 +17,6 @@ end
 function run_simulation(app)
     callback!(
         app,
-        Output("sim_complete", "displayed"),
-        Output("sim_complete", "message"),
         Output("build_and_run_msg", "children"),
         Output("store_inv_on_hand", "data"),
         Output("store_inv_level", "data"),
@@ -67,8 +65,7 @@ function run_simulation(app)
             env = run_policy!(net, policy_df, policy_variable, policy_type, num_periods, backlog)
 
             #competion message
-            msg_txt = "Simulation Complete!"
-            msg = html_div(msg_txt, style = (color = "green",))
+            msg = html_div("Simulation Complete!", style = (color = "green",))
             show_msg = true
 
             #prepare results
@@ -93,7 +90,7 @@ function run_simulation(app)
             end
         end
 
-        return show_msg, msg_txt, msg, 
+        return msg, 
             JSON.json(inv_on_hand), JSON.json(inv_level), 
             JSON.json(inv_position), JSON.json(ech_position), 
             JSON.json(inv_pipeline), JSON.json(demand), 
