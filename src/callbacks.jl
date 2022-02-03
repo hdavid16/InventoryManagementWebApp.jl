@@ -131,6 +131,17 @@ function download_results(app)
         market_demand = DataFrame(JSON.parse(market_demand_json))
         replenishments = DataFrame(JSON.parse(replenishments_json))
         replace!(replenishments.reallocated, nothing => missing)
+        replace!(inv_onhand.level, nothing => Inf)
+        replace!(inv_level.level, nothing => Inf)
+        replace!(inv_position.level, nothing => Inf)
+        replace!(ech_position.level, nothing => Inf)
+        display(inv_onhand)
+        display(inv_level)
+        display(inv_position)
+        display(ech_position)
+        display(inv_pipeline)
+        display(market_demand)
+        display(replenishments)
         
         return dcc_send_string(CSV.write, inv_onhand, "inv_onhand.csv"),
             dcc_send_string(CSV.write, inv_level, "inv_level.csv"),

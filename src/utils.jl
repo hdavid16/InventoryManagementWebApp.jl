@@ -53,8 +53,8 @@ function build_network(lead_time_df)
     set_prop!(net, :materials, materials)
     
     for row in eachrow(lead_time_df)
-        src = node_dict[row[:source]]
-        dst = node_dict[row[:destination]]
+        src = node_dict[row.source]
+        dst = node_dict[row.destination]
         if src != dst #store transportation lead times
             add_edge!(net, src, dst)
             set_prop!(net, src, dst, :lead_time, Dict(
@@ -71,7 +71,10 @@ function build_network(lead_time_df)
             ))
         end
     end
-    
+    for e in edges(net)
+        display(e)
+        display(net.eprops[e])
+    end
     return net
 end
 
@@ -80,7 +83,8 @@ function build_bom!(net, bom_df)
     isempty(bom_df) && return
 
     #extract list of materials 
-    mats = union(bom_df.input,bom_df.output)
+    mats0 = get_prop(net, :materials)
+    mats = union(bom_df.input,bom_df.output,mats0)
 
     #build bom
     bom = zeros(length(mats), length(mats))
@@ -91,7 +95,8 @@ function build_bom!(net, bom_df)
         dst_loc = findfirst(i -> i == dst, mats)
         bom[src_loc,dst_loc] = -row.value
     end
-
+    display(mats)
+    display(bom)
     set_prop!(net, :materials, mats)
     set_prop!(net, :bill_of_materials, bom)
 end
@@ -99,13 +104,13 @@ end
 function build_demand!(net, demand_df)
     #parse values in third colun (distributions)
     transform!(demand_df,
-        :demand_distribution => #if its a string, parse it; if the parsed value is a number then put make it a singleton array
+        "demand_distribution" => #if its a string, parse it; if the parsed value is a number then put make it a singleton array
             ByRow(
                 i -> i isa String ? eval(Meta.parse(i)) : i |>
                 j -> j isa Number ? [j] : j
             )
             => :demand_distribution,
-        :demand_frequency => 
+        "demand_frequency" => 
             ByRow(
                 i -> i isa String ? eval(Meta.parse(i)) : i
             )
@@ -114,9 +119,9 @@ function build_demand!(net, demand_df)
 
     #add demand distribution and frequency for each node
     node_dict = get_prop(net, :node_dictionary)
-    demand_grp = groupby(demand_df, :node) #group by node
+    demand_grp = groupby(demand_df, "node") #group by node
     for df in demand_grp
-        node_name = df.node[1] #node id is in first column
+        node_name = df.node[1]
         node_id = node_dict[node_name]
         set_props!(net, node_id, Dict(
             :demand_distribution => Dict(
@@ -132,32 +137,32 @@ end
 function run_policy!(net, policy_df, policy_variable, policy_type, num_periods, backlog)
     #parse initial inventory
     transform!(policy_df,
-        :initial_inventory => #initial inventory
+        "initial_inventory" => #initial inventory
             ByRow(
                 i -> i isa String && lowercase(i) == "unlimited" ? Inf :
                      i isa String ? eval(Meta.parse(i)) : i
             )
             => :initial_inventory,
-        :param1 => #parameter 1
+        "param1" => #parameter 1
             ByRow(
                 i -> i isa String ? eval(Meta.parse(i)) : i
             )
             => :param1,
-        :param2 => #parameter 2
+        "param2" => #parameter 2
             ByRow(
                 i -> i isa String ? eval(Meta.parse(i)) : i
             )
             => :param2,
-        :review_period => #review period
+        "review_period" => #review period
             ByRow(
                 i -> i isa String ? eval(Meta.parse(i)) : i
             )
             => :review_period
     )
-
+    display(policy_df)
     #set initial inventory levels
     node_dict = get_prop(net, :node_dictionary)
-    policy_grp = groupby(policy_df, 1) #group by node
+    policy_grp = groupby(policy_df, "node") #group by node
     for df in policy_grp
         node_name = df.node[1] #node id is the first column
         node_id = node_dict[node_name]
@@ -165,7 +170,10 @@ function run_policy!(net, policy_df, policy_variable, policy_type, num_periods, 
             df.material .=> df.initial_inventory
         ))
     end
-
+    for n in vertices(net)
+        display(n)
+        display(net.vprops[n])
+    end
     #build dictionaries for policy
     param1 = Dict((i[1],i[2]) => i[:param1] for i in eachrow(policy_df))
     param2 = Dict((i[1],i[2]) => i[:param2] for i in eachrow(policy_df))
