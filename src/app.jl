@@ -69,7 +69,7 @@ function build_app()
                     (label="Inventory Position",value="inv_position"),
                     (label="Echelon Position",value="ech_position")
                 ],
-                value="ech_position",
+                value="inv_position",
             ),
         ]),
         html_hr(),
