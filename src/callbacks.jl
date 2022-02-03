@@ -41,7 +41,7 @@ function run_simulation(app)
         #initialize outputs
         msg = html_div("")
         msg_txt = ""
-        display = false
+        show_msg = false
         inv_on_hand = DataFrame()
         inv_level = DataFrame()
         inv_position = DataFrame()
@@ -70,7 +70,7 @@ function run_simulation(app)
             #competion message
             msg_txt = "Simulation Complete!"
             msg = html_div(msg_txt, style = (color = "green",))
-            display = true
+            show_msg = true
 
             #prepare results
             node_dict = get_prop(net, :node_dictionary)
@@ -94,7 +94,7 @@ function run_simulation(app)
             end
         end
 
-        return display, msg_txt, msg, 
+        return show_msg, msg_txt, msg, 
             JSON.json(inv_on_hand), JSON.json(inv_level), 
             JSON.json(inv_position), JSON.json(ech_position), 
             JSON.json(inv_pipeline), JSON.json(demand), 
@@ -135,13 +135,6 @@ function download_results(app)
         replace!(inv_level.level, nothing => Inf)
         replace!(inv_position.level, nothing => Inf)
         replace!(ech_position.level, nothing => Inf)
-        display(inv_onhand)
-        display(inv_level)
-        display(inv_position)
-        display(ech_position)
-        display(inv_pipeline)
-        display(market_demand)
-        display(replenishments)
         
         return dcc_send_string(CSV.write, inv_onhand, "inv_onhand.csv"),
             dcc_send_string(CSV.write, inv_level, "inv_level.csv"),

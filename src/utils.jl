@@ -71,10 +71,7 @@ function build_network(lead_time_df)
             ))
         end
     end
-    for e in edges(net)
-        display(e)
-        display(net.eprops[e])
-    end
+
     return net
 end
 
@@ -95,8 +92,7 @@ function build_bom!(net, bom_df)
         dst_loc = findfirst(i -> i == dst, mats)
         bom[src_loc,dst_loc] = -row.value
     end
-    display(mats)
-    display(bom)
+
     set_prop!(net, :materials, mats)
     set_prop!(net, :bill_of_materials, bom)
 end
@@ -159,7 +155,7 @@ function run_policy!(net, policy_df, policy_variable, policy_type, num_periods, 
             )
             => :review_period
     )
-    display(policy_df)
+    
     #set initial inventory levels
     node_dict = get_prop(net, :node_dictionary)
     policy_grp = groupby(policy_df, "node") #group by node
@@ -170,10 +166,7 @@ function run_policy!(net, policy_df, policy_variable, policy_type, num_periods, 
             df.material .=> df.initial_inventory
         ))
     end
-    for n in vertices(net)
-        display(n)
-        display(net.vprops[n])
-    end
+
     #build dictionaries for policy
     param1 = Dict((i[1],i[2]) => i[:param1] for i in eachrow(policy_df))
     param2 = Dict((i[1],i[2]) => i[:param2] for i in eachrow(policy_df))
