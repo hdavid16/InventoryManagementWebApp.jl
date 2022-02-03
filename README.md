@@ -2,7 +2,7 @@
 
 This is a quick and simple interface to run *InventoryManagement.jl* using [Dash](https://dash.plotly.com/julia). The webapp is also hosted on [Heroku](https://supply-chain-sim.herokuapp.com/).
 
-The interface will request loading 4 CSV files as inputs to build the simulation environment (*Note*: all names are case sensitive and should be strings):
+The interface will request loading 4 CSV files as inputs to build the simulation environment (*Note*: all names are case sensitive and **must be strings**, not numbers. If you have a numerical identifier for a name, preceed it by a string, i.e., `100 -> m100`):
 - Bill of Materials: must have the following columns:
   - `input`: material input name 
   - `output`: material produced name 
