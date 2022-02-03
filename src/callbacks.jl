@@ -65,7 +65,7 @@ function run_simulation(app)
             net = build_network(lt_df)
             build_bom!(net, bom_df)
             build_demand!(net, demand_df)
-            run_policy!(net, policy_df, policy_variable, policy_type, num_periods, backlog)
+            env = run_policy!(net, policy_df, policy_variable, policy_type, num_periods, backlog)
 
             #competion message
             msg_txt = "Simulation Complete!"
@@ -89,7 +89,7 @@ function run_simulation(app)
             end
             for df in [inv_pipeline, replenishments]
                 transform!(df,
-                    :arc => ByRow(i -> (node_names[i[1]], node_names[i[2]])) => :arc
+                    :arc => ByRow(i -> "$(node_names[i[1]]) => $(node_names[i[2]])") => :arc
                 )
             end
         end
@@ -130,6 +130,7 @@ function download_results(app)
         inv_pipeline = DataFrame(JSON.parse(inv_pipeline_json))
         market_demand = DataFrame(JSON.parse(market_demand_json))
         replenishments = DataFrame(JSON.parse(replenishments_json))
+        replace!(replenishments.reallocated, nothing => missing)
         
         return dcc_send_string(CSV.write, inv_onhand, "inv_onhand.csv"),
             dcc_send_string(CSV.write, inv_level, "inv_level.csv"),
