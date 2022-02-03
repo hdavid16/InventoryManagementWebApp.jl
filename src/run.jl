@@ -1,3 +1,3 @@
 using InventoryManagementWebApp
 
-build_app()
+build_app(parse(Int,ARGS[1]))
