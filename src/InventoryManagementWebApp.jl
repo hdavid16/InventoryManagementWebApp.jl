@@ -1,8 +1,8 @@
 module InventoryManagementWebApp
 
-using Dash, DashHtmlComponents, DashCoreComponents, DashTable	
-using DataFrames, Base64
-using InventoryManagement
+using Dash	
+using CSV, DataFrames, Base64, JSON
+using InventoryManagement, Distributions
 
 export build_app
 
