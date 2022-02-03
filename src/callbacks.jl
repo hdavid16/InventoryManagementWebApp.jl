@@ -37,8 +37,6 @@ function run_simulation(app)
     ) do n_clicks, bom_json, lt_json, demand_json, policy_json, policy_variable, policy_type, op_mode, num_periods
         #initialize outputs
         msg = html_div("")
-        msg_txt = ""
-        show_msg = false
         inv_on_hand = DataFrame()
         inv_level = DataFrame()
         inv_position = DataFrame()
@@ -66,7 +64,6 @@ function run_simulation(app)
 
             #competion message
             msg = html_div("Simulation Complete!", style = (color = "green",))
-            show_msg = true
 
             #prepare results
             node_dict = get_prop(net, :node_dictionary)
