@@ -1,4 +1,4 @@
-function build_app()
+function build_app(port=8050)
     app = dash(external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"])
     app.layout = html_div() do 
         #Header
@@ -12,7 +12,7 @@ function build_app()
         dcc_upload(
             id="upload_bill_of_materials",
             children=html_div([
-                "1. Input bill of materials: "
+                "1. Load bill of materials: "
                 html_a("Select File")
             ]),
             multiple=false
@@ -25,7 +25,7 @@ function build_app()
         dcc_upload(
             id="upload_lead_times",
             children=html_div([
-                "2. Input network lead times: "
+                "2. Load network lead times: "
                 html_a("Select File")
             ]),
             multiple=false
@@ -38,7 +38,7 @@ function build_app()
         dcc_upload(
             id="upload_demand",
             children=html_div([
-                "3. Input network demand: "
+                "3. Load network demand: "
                 html_a("Select File")
             ]),
             multiple=false
@@ -51,7 +51,7 @@ function build_app()
         dcc_upload(
             id="upload_policy",
             children=html_div([
-                "4. Input inventory policy: "
+                "4. Load inventory policy: "
                 html_a("Select File")
             ]),
             multiple=false
@@ -138,7 +138,7 @@ function build_app()
 
     build_callbacks(app)
 
-    run_server(app, "0.0.0.0", 8050, debug=true)
+    run_server(app, "0.0.0.0", port, debug=true)
 
     return nothing
 end
