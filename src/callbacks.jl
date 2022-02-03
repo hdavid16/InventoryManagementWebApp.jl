@@ -17,6 +17,8 @@ end
 function run_simulation(app)
     callback!(
         app,
+        Output("sim_complete", "displayed"),
+        Output("sim_complete", "message"),
         Output("build_and_run_msg", "children"),
         Output("store_inv_on_hand", "data"),
         Output("store_inv_level", "data"),
@@ -37,6 +39,8 @@ function run_simulation(app)
     ) do n_clicks, bom_json, lt_json, demand_json, policy_json, policy_variable, policy_type, op_mode, num_periods
         #initialize outputs
         msg = html_div("")
+        msg_txt = ""
+        show_msg = false
         inv_on_hand = DataFrame()
         inv_level = DataFrame()
         inv_position = DataFrame()
@@ -63,7 +67,9 @@ function run_simulation(app)
             env = run_policy!(net, policy_df, policy_variable, policy_type, num_periods, backlog)
 
             #competion message
-            msg = html_div("Simulation Complete!", style = (color = "green",))
+            msg_txt = "Simulation Complete!"
+            msg = html_div(msg_txt, style = (color = "green",))
+            show_msg = true
 
             #prepare results
             node_dict = get_prop(net, :node_dictionary)
@@ -87,7 +93,7 @@ function run_simulation(app)
             end
         end
 
-        return msg, 
+        return show_msg, msg_txt, msg, 
             JSON.json(inv_on_hand), JSON.json(inv_level), 
             JSON.json(inv_position), JSON.json(ech_position), 
             JSON.json(inv_pipeline), JSON.json(demand), 
