@@ -1,0 +1,9 @@
+node,material,initial_inventory,param1,param2,review_period
+node1,m100,unlimited,,,
+node1,m200,0,,,
+node2,m100,10,5,5,1
+node2,m200,5,,,
+node3,m100,10,5,5,1
+node3,m200,0,,,
+node4,m100,5,0,5,1
+node4,m200,5,0,5,1

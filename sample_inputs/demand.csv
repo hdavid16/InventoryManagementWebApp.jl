@@ -1,0 +1,4 @@
+node,material,demand_distribution,demand_frequency
+node3,m100,"Normal(3,1)",1
+node4,m200,"Normal(2,1)",1
+node4,m100,"Normal(1,1)",1

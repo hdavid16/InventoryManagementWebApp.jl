@@ -26,6 +26,8 @@ The interface will request loading 4 CSV files as inputs to build the simulation
   - `param2`: second parameter for the inventory policy (`Q` for `(r, Q)` or `S` for `(s, S)`)
   - `review_period`: integer number of periods between each inventory review
 
+*Note*: Sample input files are included in `./sample_inputs/`.
+
 ## Outputs
 
 The simulation can then be run for the number of periods specified on the webapp interface. Once the simulation completes, the timeseries results can be downloaded as CSVs:
