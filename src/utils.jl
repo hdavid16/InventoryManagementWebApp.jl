@@ -39,9 +39,6 @@ function show_table(df, filename, last_modified)
 end
 
 function build_network(lead_time_df)
-    # columns: source, destination, material1, material2, ... (where the values under the materials are the lead times)
-    #TODO: add checks to the lead_time_df input
-
     #initialize network
     node_names = union(lead_time_df.source,lead_time_df.destination)
     num_nodes = length(node_names)
@@ -77,7 +74,6 @@ function build_network(lead_time_df)
 end
 
 function build_bom!(net, bom_df)
-    #TODO: check that materials in lead time df are all included in bom
     isempty(bom_df) && return
 
     #extract list of materials 
@@ -189,5 +185,4 @@ function run_policy!(net, policy_df, policy_variable, policy_type, num_periods, 
     simulate_policy!(env, param1, param2; policy_variable, policy_type, review_period)
 
     return env
-    #TODO: Do we want to include an MOQ?
 end
