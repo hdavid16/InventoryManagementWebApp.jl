@@ -1,6 +1,6 @@
 module InventoryManagementWebApp
 
-using Dash	
+using Dash
 using CSV, DataFrames, Base64, JSON
 using InventoryManagement, Distributions
 

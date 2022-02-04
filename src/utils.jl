@@ -12,11 +12,7 @@ function parse_contents(contents, filename)
             str = String(decoded)
             df =  CSV.read(IOBuffer(str), DataFrame)
         end
-    catch e
-        print(e)
-        return html_div([
-            "A valid CSV file needs to be provided. Try again."
-        ])
+    catch
     end
     
     return df
@@ -27,9 +23,16 @@ function show_table(df, filename, last_modified)
         last_modified = Libc.strftime(last_modified)
     end
 
+    if isempty(df)
+        filename = "An empty or invalid CSV file was loaded."
+        last_modified = "Try again."
+        color = "red"
+    else
+        color = "green"
+    end
     return html_div([
-        html_div("File Loaded: $filename"),
-        html_div("Last Modified: $(last_modified)"),
+        html_div("File Loaded: $filename", style = (color = color,)),
+        html_div("Last Modified: $(last_modified)", style = (color = color,)),
         dash_datatable(
             data=[Dict(pairs(NamedTuple(eachrow(df)[j]))) for j in 1:nrow(df)],
             columns=[Dict("name" =>i, "id" => i) for i in names(df)],

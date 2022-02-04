@@ -12,7 +12,7 @@ function build_app(port=8050)
         dcc_upload(
             id="upload_bill_of_materials",
             children=html_div([
-                "1. Load bill of materials: "
+                "1. Load bill of materials table: "
                 html_a("Select File")
             ]),
             multiple=false
@@ -25,7 +25,7 @@ function build_app(port=8050)
         dcc_upload(
             id="upload_lead_times",
             children=html_div([
-                "2. Load network lead times: "
+                "2. Load network lead time table: "
                 html_a("Select File")
             ]),
             multiple=false
@@ -38,7 +38,7 @@ function build_app(port=8050)
         dcc_upload(
             id="upload_demand",
             children=html_div([
-                "3. Load network demand: "
+                "3. Load network demand table: "
                 html_a("Select File")
             ]),
             multiple=false
@@ -47,22 +47,23 @@ function build_app(port=8050)
         html_div(id="show_demand"),
         html_hr(),
         
-        #Inventory Policy
-        dcc_upload(
-            id="upload_policy",
-            children=html_div([
-                "4. Load inventory policy: "
-                html_a("Select File")
-            ]),
-            multiple=false
-        ),
-        dcc_store(id="store_policy",data=JSON.json(DataFrame())),
-        html_div(id="show_policy"),
+        #Specify if tracking inventory position or echelon position
+        html_div([
+            "4. Select replenishment policy type:",
+            dcc_radioitems(
+                id="policy_type",
+                options = [
+                    (label="(r, Q)",value="rQ"),
+                    (label="(s, S)",value="sS")
+                ],
+                value="rQ",
+            ),
+        ]),
         html_hr(),
 
         #Specify if tracking inventory position or echelon position
         html_div([
-            "5. Select varible for inventory policy:",
+            "5. Select variable for inventory policy:",
             dcc_radioitems(
                 id="policy_variable",
                 options = [
@@ -74,18 +75,17 @@ function build_app(port=8050)
         ]),
         html_hr(),
 
-        #Specify if tracking inventory position or echelon position
-        html_div([
-            "6. Select policy type:",
-            dcc_radioitems(
-                id="policy_type",
-                options = [
-                    (label="(r, Q)",value="rQ"),
-                    (label="(s, S)",value="sS")
-                ],
-                value="rQ",
-            ),
-        ]),
+        #Inventory Policy
+        dcc_upload(
+            id="upload_policy",
+            children=html_div([
+                "6. Load inventory policy table: "
+                html_a("Select File")
+            ]),
+            multiple=false
+        ),
+        dcc_store(id="store_policy",data=JSON.json(DataFrame())),
+        html_div(id="show_policy"),
         html_hr(),
 
         #Specify if backlogging

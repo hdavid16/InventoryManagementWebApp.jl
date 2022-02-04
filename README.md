@@ -42,3 +42,4 @@ The simulation can then be run for the number of periods specified on the webapp
 ## Tips
 - For best performance with the Heroku app, use a standard web browser that is up to date. 
 - When downloading result files, your browser will prompt you to allow multiple file downloads.
+- The first run on the Heroku app may at times be slow because the code is being compiled. If an error is thrown, refreshing the site should fix it.

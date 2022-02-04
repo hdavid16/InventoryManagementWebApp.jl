@@ -1,4 +1,4 @@
-function show_lead_times(app, prop)
+function show_table(app, prop)
     callback!(
         app,
         Output("show_$prop", "children"),
@@ -6,6 +6,7 @@ function show_lead_times(app, prop)
         Input("upload_$prop", "contents"),
         State("upload_$prop", "filename"),
         State("upload_$prop", "last_modified"),
+        prevent_initial_call = true
     ) do contents, filename, last_modified
         df = parse_contents(contents, filename)
         df_show = show_table(df, filename, last_modified)
@@ -35,7 +36,8 @@ function run_simulation(app)
         State("policy_variable","value"),
         State("policy_type","value"),
         State("mode","value"),
-        State("num_periods","value")
+        State("num_periods","value"),
+        prevent_initial_call = true
     ) do n_clicks, bom_json, lt_json, demand_json, policy_json, policy_variable, policy_type, op_mode, num_periods
         #initialize outputs
         msg = html_div("")
@@ -50,47 +52,55 @@ function run_simulation(app)
         replenishments = DataFrame()
 
         #trigger function call 
-        if n_clicks > 0 && num_periods > 0
-            #parse inputs
-            bom_df = DataFrame(JSON.parse(bom_json))
-            lt_df = DataFrame(JSON.parse(lt_json))
-            demand_df = DataFrame(JSON.parse(demand_json))
-            policy_df = DataFrame(JSON.parse(policy_json))
-            backlog = op_mode == "backlog"
-            policy_variable = Symbol(policy_variable)
-            policy_type = Symbol(policy_type)
-            
-            #buiold and run model
-            net = build_network(lt_df)
-            build_bom!(net, bom_df)
-            build_demand!(net, demand_df)
-            env = run_policy!(net, policy_df, policy_variable, policy_type, num_periods, backlog)
-
-            #competion message
-            msg_txt = "Simulation Complete!"
-            msg = html_div(msg_txt, style = (color = "green",))
-            show_msg = true
-
-            #prepare results
-            node_dict = get_prop(net, :node_dictionary)
-            node_names = Dict(val => key for (key,val) in node_dict)
-            inv_on_hand = env.inv_on_hand
-            inv_level = env.inv_level
-            inv_position = env.inv_position
-            ech_position = env.ech_position
-            demand = env.demand
-            inv_pipeline = env.inv_pipeline
-            replenishments = env.replenishments
-            for df in [inv_on_hand, inv_level, inv_position, ech_position, demand]
-                transform!(df,
-                    :node => ByRow(i -> node_names[i]) => :node
-                )
+        if num_periods > 0
+            try
+                #parse inputs
+                bom_df = DataFrame(JSON.parse(bom_json))
+                lt_df = DataFrame(JSON.parse(lt_json))
+                demand_df = DataFrame(JSON.parse(demand_json))
+                policy_df = DataFrame(JSON.parse(policy_json))
+                backlog = op_mode == "backlog"
+                policy_variable = Symbol(policy_variable)
+                policy_type = Symbol(policy_type)
+                
+                #buiold and run model
+                net = build_network(lt_df)
+                build_bom!(net, bom_df)
+                build_demand!(net, demand_df)
+                env = run_policy!(net, policy_df, policy_variable, policy_type, num_periods, backlog)
+                
+                #competion message
+                msg_txt = "Simulation Complete!"
+                current_time = Libc.strftime(Libc.TmStruct(Libc.TimeVal().sec))
+                msg = html_div("Simulation completed at $(current_time)", style = (color = "green",))
+                show_msg = true
+                
+                #prepare results
+                node_dict = get_prop(net, :node_dictionary)
+                node_names = Dict(val => key for (key,val) in node_dict)
+                inv_on_hand = env.inv_on_hand
+                inv_level = env.inv_level
+                inv_position = env.inv_position
+                ech_position = env.ech_position
+                demand = env.demand
+                inv_pipeline = env.inv_pipeline
+                replenishments = env.replenishments
+                for df in [inv_on_hand, inv_level, inv_position, ech_position, demand]
+                    transform!(df,
+                        :node => ByRow(i -> node_names[i]) => :node
+                    )
+                end
+                for df in [inv_pipeline, replenishments]
+                    transform!(df,
+                        :arc => ByRow(i -> "$(node_names[i[1]]) => $(node_names[i[2]])") => :arc
+                    )
+                end
+            catch e
+                current_time = Libc.strftime(Libc.TmStruct(Libc.TimeVal().sec))
+                msg = html_div("Simulation failed at $(current_time) due to an error: $e.", style = (color = "red",))
             end
-            for df in [inv_pipeline, replenishments]
-                transform!(df,
-                    :arc => ByRow(i -> "$(node_names[i[1]]) => $(node_names[i[2]])") => :arc
-                )
-            end
+        else
+            msg = html_div("Enter a positive integer for the number of periods to run.", style = (color = "red",))
         end
 
         return show_msg, msg_txt, msg, 
@@ -146,10 +156,10 @@ function download_results(app)
 end
 
 function build_callbacks(app)
-    show_lead_times(app, "bill_of_materials")
-    show_lead_times(app, "lead_times")
-    show_lead_times(app, "demand")
-    show_lead_times(app, "policy")
+    show_table(app, "bill_of_materials")
+    show_table(app, "lead_times")
+    show_table(app, "demand")
+    show_table(app, "policy")
     run_simulation(app)
     download_results(app)
 end
