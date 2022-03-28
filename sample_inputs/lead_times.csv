@@ -1,5 +1,5 @@
-source,destination,m100,m200
-node1,node2,"Normal(10,1)",
-node1,node3,"Normal(5,1)",
-node2,node2,,1
-node2,node4,,"Normal(3,1)"
+source,destination,material,lead_time
+node1,node2,m100,"Normal(10,1)"
+node1,node3,m100,"Normal(5,1)"
+node2,node2,m200,1
+node2,node4,m200,"Normal(3,1)"

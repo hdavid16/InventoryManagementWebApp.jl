@@ -12,7 +12,8 @@ The interface will request loading 4 CSV files as inputs to build the simulation
 - Lead Times: must have the following columns 
   - `source`: source node name 
   - `destination`: destination node name
-  - materials: one column should be added for each material in the network. An integer number of periods can be specified as the `lead time` for that `arc` (`source -> destination`). Alternately, a valid univariate distribution from [Distributions.jl](https://juliastats.org/Distributions.jl/stable/univariate/) can be specified **inside quotes ("")**. If `source = destination`, the lead time is a `production lead time` and **must be an integer**, otherwise, it is a `transporation lead time` between the two nodes (integer or probability distribution). Blanks are allowed in this table to indicate that a `lead time` does not exist for that `material` on the specified network `arc`. *Note*: Distributions that can take negative values (i.e., `Normal` distribution) will be truncated at `0`. This will shift the actual mean of the distribution.
+  - `material`: material name
+  - `lead_time`: an integer number of periods can be specified as the `lead time` for that `arc` (`source -> destination`). Alternately, a valid univariate distribution from [Distributions.jl](https://juliastats.org/Distributions.jl/stable/univariate/) can be specified **inside quotes ("")**. If `source = destination`, the lead time is a `production lead time` and **must be an integer**, otherwise, it is a `transporation lead time` between the two nodes (integer or probability distribution). *Note*: Distributions that can take negative values (i.e., `Normal` distribution) will be truncated at `0`. This will shift the actual mean of the distribution.
 - Demand: must have the following columns 
   - `node`: node name 
   - `material`: material name 

@@ -42,6 +42,19 @@ function show_table(df, filename, last_modified)
 end
 
 function build_network(lead_time_df)
+    #parse
+    filter!(i -> !isnothing(i.lead_time), lead_time_df) #remove any empty rows
+    transform!(lead_time_df,
+        :lead_time => 
+            ByRow(i -> i isa String ? eval(Meta.parse(i)) : i) 
+            => :lead_time
+    )
+    transform!(lead_time_df,
+        :lead_time => 
+            ByRow(j -> j isa Number ? [j] : j) #put numbers in Array for lead time sampling
+            => :lead_time_arr
+    )
+
     #initialize network
     node_names = union(lead_time_df.source,lead_time_df.destination)
     num_nodes = length(node_names)
@@ -50,26 +63,17 @@ function build_network(lead_time_df)
     set_prop!(net, :node_dictionary, node_dict)
 
     #add materials if provided
-    materials = setdiff(names(lead_time_df), ["source", "destination"])
+    materials = unique(lead_time_df.material)
     set_prop!(net, :materials, materials)
     
-    for row in eachrow(lead_time_df)
-        src = node_dict[row.source]
-        dst = node_dict[row.destination]
+    for df in groupby(lead_time_df, [:source, :destination])
+        src = node_dict[df.source[1]]
+        dst = node_dict[df.destination[1]]
         if src != dst #store transportation lead times
             add_edge!(net, src, dst)
-            set_prop!(net, src, dst, :lead_time, Dict(
-                m => #if its a string, parse it; if the parsed value is a number then put make it a singleton array
-                    row[m] isa String ? eval(Meta.parse(row[m])) : row[m] |>
-                    i -> i isa Number ? [i] : i
-                for m in materials if !isnothing(row[m])
-            ))
+            set_prop!(net, src, dst, :lead_time, Dict(df.material .=> df.lead_time_arr))
         else #store production times
-            set_prop!(net, src, :production_time, Dict(
-                m => 
-                    row[m] isa String ? eval(Meta.parse(row[m])) : row[m] 
-                for m in materials if !isnothing(row[m])
-            ))
+            set_prop!(net, src, :production_time, Dict(df.material .=> df.lead_time))
         end
     end
 
