@@ -22,10 +22,10 @@ The interface will request loading 4 CSV files as inputs to build the simulation
 - Policy: must have the following columns
   - `node`: node name
   - `material`: material name
-  - `initial_inventory`: starting inventory quantity for that `material` at that `node`. If unlimited demand, use `unlimited`. 
+  - `initial_inventory`: starting inventory quantity for that `material` at that `node`. If unlimited inventory, use `unlimited`. 
   - `param1`: reorder point for the inventory policy (`r` for `(r, Q)` or `s` for `(s, S)`)
   - `param2`: second parameter for the inventory policy (`Q` for `(r, Q)` or `S` for `(s, S)`)
-  - `review_period`: strictly positive integer number of periods between each inventory review
+  - `review_period`: strictly positive number of periods between each inventory review
 
 *Note*: Sample input files are included in `./sample_inputs/`.
 
