@@ -174,11 +174,11 @@ function run_policy!(net, policy_df, policy_variable, policy_type, num_periods, 
             df.material .=> df.initial_inventory
         ))
     end
-
+    
     #build dictionaries for policy
-    param1 = Dict((i[1],i[2]) => i[:param1] for i in eachrow(policy_df))
-    param2 = Dict((i[1],i[2]) => i[:param2] for i in eachrow(policy_df))
-    review_period = Dict((i[1],i[2]) => i[:review_period] for i in eachrow(policy_df))
+    param1 = Dict((node_dict[i[:node]],i[:material]) => i[:param1] for i in eachrow(policy_df))
+    param2 = Dict((node_dict[i[:node]],i[:material]) => i[:param2] for i in eachrow(policy_df))
+    review_period = Dict((node_dict[i[:node]],i[:material]) => i[:review_period] for i in eachrow(policy_df))
 
     #create and run simulation
     env = SupplyChainEnv(

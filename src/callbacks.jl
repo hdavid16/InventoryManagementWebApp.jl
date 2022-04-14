@@ -62,8 +62,8 @@ function run_simulation(app)
                 backlog = op_mode == "backlog"
                 policy_variable = Symbol(policy_variable)
                 policy_type = Symbol(policy_type)
-                
-                #buiold and run model
+
+                #build and run model
                 net = build_network(lt_df)
                 build_bom!(net, bom_df)
                 build_demand!(net, demand_df)
@@ -98,6 +98,7 @@ function run_simulation(app)
             catch e
                 current_time = Libc.strftime(Libc.TmStruct(Libc.TimeVal().sec))
                 msg = html_div("Simulation failed at $(current_time) due to an error: $e.", style = (color = "red",))
+                throw(e)
             end
         else
             msg = html_div("Enter a positive integer for the number of periods to run.", style = (color = "red",))
