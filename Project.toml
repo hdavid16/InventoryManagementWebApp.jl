@@ -17,7 +17,7 @@ CSV = "0.10"
 Dash = "1"
 DataFrames = "1"
 Distributions = "0.25"
-InventoryManagement = "0.3.4"
+InventoryManagement = "0.3.4, 0.5"
 JSON = "0.21"
 julia = "1.7"
 
