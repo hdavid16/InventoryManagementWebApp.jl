@@ -1,6 +1,6 @@
 # InventoryManagementWebApp
 
-This is a quick and simple interface to run [InventoryManagement.jl](https://github.com/hdavid16/InventoryManagement.jl) using [Dash](https://dash.plotly.com/julia). The webapp is also hosted on [Heroku](https://supply-chain-sim.herokuapp.com/).
+This is a quick and simple interface to run [InventoryManagement.jl](https://github.com/hdavid16/InventoryManagement.jl) v0.3 using [Dash](https://dash.plotly.com/julia). The webapp is also hosted on [Heroku](https://supply-chain-sim.herokuapp.com/).
 
 ## Inputs
 
